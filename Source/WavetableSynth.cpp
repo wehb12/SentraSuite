@@ -33,7 +33,7 @@ void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerB
 	oscillators.reserve(OSCILLATORS_COUNT);
 	for (int i = 0; i < OSCILLATORS_COUNT; ++i)
 	{
-		oscillators.emplace_back(new SquareWaveOscillator());
+		oscillators.emplace_back(std::make_shared<SquareWaveOscillator>());
 		oscillators.back()->init(inSampleRate);
 		envelopes.emplace_back();
 	}

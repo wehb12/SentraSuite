@@ -14,11 +14,13 @@ void WavetableSynth::prepareToPlay (double inSampleRate, int samplesPerBlock)
 	initialiseOsciallators( inSampleRate,  samplesPerBlock);
 	
 	reset();
+	
+	filter.prepareToPlay(inSampleRate, samplesPerBlock);
 }
 
 void WavetableSynth::reset()
 {
-	for (juce::dsp::StateVariableTPTFilter<float>& filter : dspFilters) filter.reset();
+	filter.reset();
 }
 
 void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerBlock)
@@ -34,15 +36,6 @@ void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerB
 	{
 		oscillators.emplace_back(waveTable, sampleRate);
 		envelopes.emplace_back();
-		filters.emplace_back();
-		cutoffFrequencies.emplace_back();
-		dspFilters.emplace_back();
-		juce::dsp::ProcessSpec spec;
-		spec.maximumBlockSize = samplesPerBlock;
-		spec.sampleRate = sampleRate;
-		spec.numChannels = 2;
-		dspFilters.back().prepare(spec);
-		dspFilters.back().setType(juce::dsp::StateVariableTPTFilterType::lowpass);
 	}
 }
 
@@ -76,8 +69,6 @@ const WaveTable WavetableSynth::generateSquareWaveTable()
 	return squareWaveTable;
 }
 
-//float cutoffFrequency = 0.0f;
-bool noteOn = false;
 void WavetableSynth::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	int currentSample = 0;
@@ -95,17 +86,7 @@ void WavetableSynth::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiB
 	
 	render(buffer, currentSample, buffer.getNumSamples());
 	
-//	for (int oscillatorId = 0; oscillatorId < oscillators.size(); ++oscillatorId)
-	{
-		juce::dsp::StateVariableTPTFilter<float>& dspFilter = dspFilters.back();
-		float& cutoffFreq = cutoffFrequencies.back();
-		
-		dspFilter.setCutoffFrequency(cutoffFreq);
-		dspFilter.setResonance(3);
-		juce::dsp::AudioBlock<float> block(buffer);
-		juce::dsp::ProcessContextReplacing<float> context(block);
-		dspFilter.process(context);
-	}
+	filter.processBlock(buffer, midiMessages);
 }
 
 void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, int endSample)
@@ -116,9 +97,6 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 	{
 		WavetableOscillator& osc = oscillators[oscillatorId];
 		maxiEnv& env = envelopes[oscillatorId];
-		maxiFilter& filter = filters[oscillatorId];
-		juce::dsp::StateVariableTPTFilter<float>& dspFilter = dspFilters[oscillatorId];
-		float& cutoffFreq = cutoffFrequencies.back();
 		
 		env.setAttack(500);
 		env.setDecay(500);
@@ -130,7 +108,6 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 			{
 				const float sampleEnv = env.adsr(osc.getSample(), env.trigger) * 0.1f;
 				
-//				const float sampleFiltered = filter.lores(sampleEnv, cutoffFreq, 1.5);
 				firstChannel[sample] += sampleEnv;
 				
 				if (env.trigger == 0 && (sampleEnv < 0.000001 && sampleEnv > -0.000001))
@@ -141,7 +118,7 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 		}
 		if (env.trigger)
 		{
-			cutoffFreq = std::min(cutoffFreq + 2.0f, 100.0f);
+			filter.setCutoffFrequency(std::min(filter.getCutoffFrequency() + 2.0f, 100.0f));
 		}
 	}
 
@@ -161,13 +138,10 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 		const auto frequency = midiNoteNumberTofrequency(oscillatorId);
 		oscillators[oscillatorId].setFrequency(frequency);
 		envelopes[oscillatorId].trigger = 1;
-//		filters[oscillatorId] = maxiFilter();
-		cutoffFrequencies.back() = 40.0f;
 	}
 	else if (midiEvent.isNoteOff())
 	{
 		const int oscillatorId = midiEvent.getNoteNumber();
-//		oscillators[oscillatorId].stop();
 		envelopes[oscillatorId].trigger = 0;
 	}
 	else if (midiEvent.isAllNotesOff())

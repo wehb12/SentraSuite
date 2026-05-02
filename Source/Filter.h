@@ -12,24 +12,26 @@
 
 #include <vector>
 #include "JuceHeader.h"
+#include "juce_dsp/processors/juce_StateVariableTPTFilter.h"
 
-class LowpassHighpassFilter
+class Filter
 {
-	public:
-	// setters
-	void setHighpass(bool highpass);
+public:
+	void setIsHighpass(bool highpass);
 	void setCutoffFrequency(float cutoffFrequency);
+	inline float getCutoffFrequency() { return cutoffFrequency; };
 	void setSamplingRate(float samplingRate);
 	
-	// Does not necessarily need to use JUCE's audio buffer
+	void prepareToPlay(double inSampleRate, int samplesPerBlock);
 	void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&);
+	void reset();
 	
-	private:
-	bool highpass = false;
+private:
+	bool isHighpass = false;
 	float cutoffFrequency = 100.0f;
 	float samplingRate = 0.0f;;
+	float resonance = 3.0f;
 	
-	// allpass filters' buffers: 1 sample per channel
-	std::vector<float> dnBuffer;
+	juce::dsp::StateVariableTPTFilter<float> dspFilter;
 };
 

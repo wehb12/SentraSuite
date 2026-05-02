@@ -10,7 +10,6 @@
 
 #include <JuceHeader.h>
 #include "WavetableSynth.h"
-#include "LowpassHighpassFilter.h"
 
 //==============================================================================
 /**
@@ -55,40 +54,11 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 	
-	// Sine wave oscillator
-	void setFrequency(double inFrequency) { targetFrequency = inFrequency; }
-	double getFrequency() { return targetFrequency; }
-	double getCurrentSampleRate() { return currentSampleRate; }
-	void updateAngleDelta();
-	// Sine wave oscillator
-	
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavetableSynthAudioProcessor)
 	
-	void createWavetable();
 	virtual void reset() override;
 	
-	// Sine wave oscillator
-	double currentSampleRate = 0.0;
-	double currentAngle = 0.0;
-	double angleDelta = 0.0;
-	double currentFrequency = 60.0;
-	double targetFrequency = 60.0;
-	// Sine wave oscillator
-	
-	//const unsigned int tableSize = 1 << 7;
-	//float level = 0.0f;
-	//juce::AudioSampleBuffer sineTable;
-	//juce::OwnedArray<WavetableOscillator> oscillators;
-	
 	WavetableSynth synth;
-	
-	// our plugin's parameters
-//	juce::AudioProcessorValueTreeState parameters;
-	std::atomic<float>* cutoffFrequencyParameter = nullptr;
-	std::atomic<float>* highpassParameter = nullptr;
-	
-	// the filter implemented in listings 1-3
-	LowpassHighpassFilter filter;
 };

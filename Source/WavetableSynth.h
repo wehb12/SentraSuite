@@ -9,10 +9,8 @@
 
 #include <JuceHeader.h>
 #include "WavetableOscillator.h"
-#include "maximilian.h"
-#include "juce_dsp/processors/juce_StateVariableTPTFilter.h"
-
-//template<> class juce::dsp::StateVariableTPTFilter<float>;
+#include "Maximilian/maximilian.h"
+#include "Filter.h"
 
 class WavetableSynth
 {
@@ -20,8 +18,6 @@ public:
 	void prepareToPlay (double sampleRate, int samplesPerBlock);
 	void processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi);
 	void reset();
-	
-//	void setCutoffFrequency(float inFreq) {cutoffFrequency = inFreq;}
 	
 private:
 	void initialiseOsciallators(double inSampleRate, int samplesPerBlock);
@@ -34,7 +30,6 @@ private:
 	double sampleRate;
 	std::vector<WavetableOscillator> oscillators;
 	std::vector<maxiEnv> envelopes;
-	std::vector<maxiFilter> filters;
-	std::vector<float> cutoffFrequencies;
-	std::vector<juce::dsp::StateVariableTPTFilter<float>> dspFilters;
+	
+	Filter filter;
 };

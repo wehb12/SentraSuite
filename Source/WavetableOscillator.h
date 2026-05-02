@@ -16,7 +16,7 @@ using WaveTable = std::vector<float>;
 
 class WavetableOscillator
 {
-	public:
+public:
 	WavetableOscillator(std::vector<float> wavetable, double inSampleRate);
 	
 	void setFrequency(float frequency);

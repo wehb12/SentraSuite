@@ -8,22 +8,30 @@
   ==============================================================================
 */
 
-#include "WavetableOscillator.h"
+#include "WavetableOscillatorBase.h"
 #include <cmath>
 
-WavetableOscillator::WavetableOscillator(std::vector<float> wavetable, double inSampleRate)
-: waveTable(std::move(wavetable))
-, sampleRate(inSampleRate)
+WavetableOscillatorBase::WavetableOscillatorBase()
+{
+}
+
+WavetableOscillatorBase::~WavetableOscillatorBase()
 {
 	
 }
 
-void WavetableOscillator::setFrequency(float frequency)
+void WavetableOscillatorBase::init(double inSampleRate)
+{
+	sampleRate = inSampleRate;
+	generateWavetable();
+}
+
+void WavetableOscillatorBase::setFrequency(float frequency)
 {
 	indexIncrement = frequency * static_cast<float>(waveTable.size()) / static_cast<float>(sampleRate);
 }
 
-float WavetableOscillator::getSample()
+float WavetableOscillatorBase::getSample()
 {
 	const auto sample = interpolateLinearly();
 	index += indexIncrement;
@@ -31,7 +39,7 @@ float WavetableOscillator::getSample()
 	return sample;
 }
 
-float WavetableOscillator::interpolateLinearly()
+float WavetableOscillatorBase::interpolateLinearly()
 {
 	const int truncatedIndex = static_cast<int>(index);
 	const int nextIndex = (truncatedIndex + 1) % static_cast<int>(waveTable.size());

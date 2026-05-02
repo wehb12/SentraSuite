@@ -14,18 +14,24 @@
 
 using WaveTable = std::vector<float>;
 
-class WavetableOscillator
+class WavetableOscillatorBase
 {
 public:
-	WavetableOscillator(std::vector<float> wavetable, double inSampleRate);
+	WavetableOscillatorBase();
+	virtual ~WavetableOscillatorBase();
+	
+	void init(double inSampleRate);
 	
 	void setFrequency(float frequency);
 	float getSample();
 	
 	void stop() { index = 0.0f; indexIncrement = 0.0f; };
 	bool isPlaying() { return indexIncrement != 0.0f; };
-private:
+	
+protected:
 	float interpolateLinearly();
+	
+	virtual void generateWavetable() = 0;
 	
 	WaveTable waveTable;
 	double sampleRate = 0.0;

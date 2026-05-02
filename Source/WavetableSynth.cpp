@@ -6,12 +6,14 @@
 //
 
 #include "WavetableSynth.h"
+#include "SquareWaveOscillator.h"
+#include "SineWaveOscillator.h"
 
-void WavetableSynth::prepareToPlay (double inSampleRate, int samplesPerBlock)
+void WavetableSynth::prepareToPlay(double inSampleRate, int samplesPerBlock)
 {
 	sampleRate = inSampleRate;
 	
-	initialiseOsciallators( inSampleRate,  samplesPerBlock);
+	initialiseOsciallators(inSampleRate,  samplesPerBlock);
 	
 	reset();
 	
@@ -27,46 +29,14 @@ void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerB
 {
 	constexpr auto OSCILLATORS_COUNT = 128;
 	
-//	const WaveTable waveTable = generateSineWaveTable();
-	const WaveTable waveTable = generateSquareWaveTable();
-	
 	oscillators.clear();
 	oscillators.reserve(OSCILLATORS_COUNT);
 	for (int i = 0; i < OSCILLATORS_COUNT; ++i)
 	{
-		oscillators.emplace_back(waveTable, sampleRate);
+		oscillators.emplace_back(new SquareWaveOscillator());
+		oscillators.back()->init(inSampleRate);
 		envelopes.emplace_back();
 	}
-}
-
-const WaveTable WavetableSynth::generateSineWaveTable()
-{
-	constexpr int WAVETABLE_LENGTH = 64;
-	WaveTable sineWaveTable(WAVETABLE_LENGTH);
-	
-	for (int i = 0; i < WAVETABLE_LENGTH; ++i)
-	{
-		sineWaveTable[i] = std::sinf(juce::MathConstants<float>::twoPi * static_cast<float>(i) / static_cast<float>(WAVETABLE_LENGTH));
-	}
-	
-	return sineWaveTable;
-}
-
-const WaveTable WavetableSynth::generateSquareWaveTable()
-{
-	constexpr int WAVETABLE_LENGTH = 64;
-	WaveTable squareWaveTable(WAVETABLE_LENGTH);
-	
-	for (int i = 0; i < (WAVETABLE_LENGTH / 2); ++i)
-	{
-		squareWaveTable[i] = -1;
-	}
-	for (int i = (WAVETABLE_LENGTH / 2); i < WAVETABLE_LENGTH; ++i)
-	{
-		squareWaveTable[i] = 1;
-	}
-	
-	return squareWaveTable;
 }
 
 void WavetableSynth::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -95,24 +65,24 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 	
 	for (int oscillatorId = 0; oscillatorId < oscillators.size(); ++oscillatorId)
 	{
-		WavetableOscillator& osc = oscillators[oscillatorId];
+		std::shared_ptr<WavetableOscillatorBase> osc = oscillators[oscillatorId];
 		maxiEnv& env = envelopes[oscillatorId];
 		
 		env.setAttack(500);
 		env.setDecay(500);
 		env.setSustain(0.8);
 		env.setRelease(200);
-		if (osc.isPlaying())
+		if (osc->isPlaying())
 		{
 			for (int sample = startSample; sample < endSample; ++sample)
 			{
-				const float sampleEnv = env.adsr(osc.getSample(), env.trigger) * 0.1f;
+				const float sampleEnv = env.adsr(osc->getSample(), env.trigger) * 0.1f;
 				
 				firstChannel[sample] += sampleEnv;
 				
 				if (env.trigger == 0 && (sampleEnv < 0.000001 && sampleEnv > -0.000001))
 				{
-					osc.stop();
+					osc->stop();
 				}
 			}
 		}
@@ -136,7 +106,7 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 	{
 		const int oscillatorId = midiEvent.getNoteNumber();
 		const auto frequency = midiNoteNumberTofrequency(oscillatorId);
-		oscillators[oscillatorId].setFrequency(frequency);
+		oscillators[oscillatorId]->setFrequency(frequency);
 		envelopes[oscillatorId].trigger = 1;
 	}
 	else if (midiEvent.isNoteOff())
@@ -148,7 +118,7 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 	{
 		for (int oscillatorId = 0; oscillatorId < oscillators.size(); ++oscillatorId)
 		{
-			oscillators[oscillatorId].stop();
+			oscillators[oscillatorId]->stop();
 			envelopes[oscillatorId].trigger = 0;
 		}
 	}

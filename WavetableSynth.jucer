@@ -5,12 +5,22 @@
               headerPath="../../ThirdParty/">
   <MAINGROUP id="IdzQi1" name="WavetableSynth">
     <GROUP id="{3904C17C-26F4-EAF0-38B5-79C73FE8EC26}" name="Source">
+      <GROUP id="{3992EE4E-FE69-DE73-A628-2D0F86BA80DA}" name="WavtableOscillators">
+        <FILE id="bnXmwA" name="SineWaveOscillator.cpp" compile="1" resource="0"
+              file="Source/SineWaveOscillator.cpp"/>
+        <FILE id="Lou49C" name="SineWaveOscillator.h" compile="0" resource="0"
+              file="Source/SineWaveOscillator.h"/>
+        <FILE id="MyoZ73" name="SquareWaveOscillator.cpp" compile="1" resource="0"
+              file="Source/SquareWaveOscillator.cpp"/>
+        <FILE id="TR1liu" name="SquareWaveOscillator.h" compile="0" resource="0"
+              file="Source/SquareWaveOscillator.h"/>
+        <FILE id="gQrEnP" name="WavetableOscillatorBase.cpp" compile="1" resource="0"
+              file="Source/WavetableOscillatorBase.cpp"/>
+        <FILE id="dz4y1m" name="WavetableOscillatorBase.h" compile="0" resource="0"
+              file="Source/WavetableOscillatorBase.h"/>
+      </GROUP>
       <FILE id="evuORl" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
       <FILE id="pId1BT" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
-      <FILE id="gQrEnP" name="WavetableOscillator.cpp" compile="1" resource="0"
-            file="Source/WavetableOscillator.cpp"/>
-      <FILE id="dz4y1m" name="WavetableOscillator.h" compile="0" resource="0"
-            file="Source/WavetableOscillator.h"/>
       <FILE id="K8rOXs" name="WavetableSynth.cpp" compile="1" resource="0"
             file="Source/WavetableSynth.cpp"/>
       <FILE id="SYgPxj" name="WavetableSynth.h" compile="0" resource="0"

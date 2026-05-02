@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="YMIv8r" name="WavetableSynth" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              headerPath="/Applications/JUCE_2026/Maximilian/src">
+  <MAINGROUP id="IdzQi1" name="WavetableSynth">
+    <GROUP id="{3904C17C-26F4-EAF0-38B5-79C73FE8EC26}" name="Source">
+      <GROUP id="{659903DB-E20E-FB65-B0B7-B6F2EEA30A71}" name="Maximilian">
+        <GROUP id="{6D8CD58E-1299-1CF3-07C4-D97F564E77CC}" name="src">
+          <GROUP id="{BCB1C847-D10D-8F09-5C9E-ED91EC122386}" name="libs">
+            <GROUP id="{CC111C07-70BC-E1CF-0ECA-C25F826FF696}" name="PolyBLEP">
+              <FILE id="oaM8aQ" name="PolyBLEP.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/PolyBLEP/PolyBLEP.cpp"/>
+              <FILE id="C1P6YB" name="PolyBLEP.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/PolyBLEP/PolyBLEP.h"/>
+              <FILE id="r4sCyK" name="README.md" compile="0" resource="1" file="/Applications/JUCE_2026/Maximilian/src/libs/PolyBLEP/README.md"/>
+            </GROUP>
+            <FILE id="Yd0Ouq" name="fft.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/fft.cpp"/>
+            <FILE id="Gkbxzs" name="fft.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/fft.h"/>
+            <FILE id="YLUKyV" name="maxiAtoms.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiAtoms.cpp"/>
+            <FILE id="UXQoiZ" name="maxiAtoms.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiAtoms.h"/>
+            <FILE id="N5XvEP" name="maxiBark.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiBark.cpp"/>
+            <FILE id="nkkIq2" name="maxiBark.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiBark.h"/>
+            <FILE id="UFGAe7" name="maxiClock.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiClock.cpp"/>
+            <FILE id="CRCJxr" name="maxiClock.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiClock.h"/>
+            <FILE id="hzddcA" name="maxiConvolve.cpp" compile="1" resource="0"
+                  file="/Applications/JUCE_2026/Maximilian/src/libs/maxiConvolve.cpp"/>
+            <FILE id="LziBSq" name="maxiConvolve.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiConvolve.h"/>
+            <FILE id="P11y0g" name="maxiFFT.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiFFT.cpp"/>
+            <FILE id="Bf5zWW" name="maxiFFT.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiFFT.h"/>
+            <FILE id="EqBNi5" name="maxiGrains.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiGrains.cpp"/>
+            <FILE id="qiqKmE" name="maxiGrains.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiGrains.h"/>
+            <FILE id="RQkVqS" name="maxim.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxim.h"/>
+            <FILE id="vJucIZ" name="maxiMFCC.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiMFCC.cpp"/>
+            <FILE id="Lsyyb3" name="maxiMFCC.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiMFCC.h"/>
+            <FILE id="c165Cr" name="maxiPolyBLEP.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiPolyBLEP.h"/>
+            <FILE id="fQU0C9" name="maxiReverb.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiReverb.cpp"/>
+            <FILE id="DqhAMT" name="maxiReverb.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiReverb.h"/>
+            <FILE id="EtszQ7" name="maxiSynths.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiSynths.cpp"/>
+            <FILE id="BcyM6W" name="maxiSynths.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/maxiSynths.h"/>
+            <FILE id="CaHuBD" name="sineTable.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/sineTable.h"/>
+            <FILE id="SNriUj" name="stb_vorbis.c" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/stb_vorbis.c"/>
+            <FILE id="gYHbJp" name="stb_vorbis.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/libs/stb_vorbis.h"/>
+          </GROUP>
+          <FILE id="n2RwLi" name="maximilian.cpp" compile="1" resource="0" file="/Applications/JUCE_2026/Maximilian/src/maximilian.cpp"/>
+          <FILE id="frtSfR" name="maximilian.h" compile="0" resource="0" file="/Applications/JUCE_2026/Maximilian/src/maximilian.h"/>
+        </GROUP>
+      </GROUP>
+      <FILE id="evuORl" name="LowpassHighpassFilter.cpp" compile="1" resource="0"
+            file="Source/LowpassHighpassFilter.cpp"/>
+      <FILE id="pId1BT" name="LowpassHighpassFilter.h" compile="0" resource="0"
+            file="Source/LowpassHighpassFilter.h"/>
+      <FILE id="gQrEnP" name="WavetableOscillator.cpp" compile="1" resource="0"
+            file="Source/WavetableOscillator.cpp"/>
+      <FILE id="dz4y1m" name="WavetableOscillator.h" compile="0" resource="0"
+            file="Source/WavetableOscillator.h"/>
+      <FILE id="K8rOXs" name="WavetableSynth.cpp" compile="1" resource="0"
+            file="Source/WavetableSynth.cpp"/>
+      <FILE id="SYgPxj" name="WavetableSynth.h" compile="0" resource="0"
+            file="Source/WavetableSynth.h"/>
+      <FILE id="ZH1QpF" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="jIAjNE" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="kzkWWC" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="mAh4X7" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors_headless" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="WavetableSynth" enablePluginBinaryCopyStep="1"
+                       vst3BinaryLocation="/Users/willhinds/Documents/Ableton/Plug-Ins/VST3/"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="WavetableSynth"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors_headless" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../../../../Applications/JUCE_2026/JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+</JUCERPROJECT>

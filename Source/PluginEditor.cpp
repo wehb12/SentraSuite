@@ -15,10 +15,12 @@ WavetableSynthAudioProcessorEditor::WavetableSynthAudioProcessorEditor (Wavetabl
 	, audioProcessor (p)
 	, wavetableTypeSelector(p.tree)
 	, envelopeGui(p.tree)
+	, filterGui(p.tree)
 {
-    setSize (400, 200);
+    setSize (600, 200);
 	addAndMakeVisible(wavetableTypeSelector);
 	addAndMakeVisible(envelopeGui);
+	addAndMakeVisible(filterGui);
 }
 
 WavetableSynthAudioProcessorEditor::~WavetableSynthAudioProcessorEditor()
@@ -40,4 +42,5 @@ void WavetableSynthAudioProcessorEditor::resized()
 	
 	wavetableTypeSelector.setBounds(area.removeFromLeft(componentWidth).removeFromTop(componentHeight));
 	envelopeGui.setBounds(area.removeFromLeft(componentWidth).removeFromTop(componentHeight));
+	filterGui.setBounds(area.removeFromLeft(componentWidth).removeFromTop(componentHeight));
 }

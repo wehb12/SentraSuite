@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "WavetableTypeSelector.h"
 #include "EnvelopeGui.h"
+#include "FilterGui.h"
 
 //==============================================================================
 /**
@@ -35,4 +36,5 @@ private:
 	
 	WavetableTypeSelector wavetableTypeSelector;
 	EnvelopeGui envelopeGui;
+	FilterGui filterGui;
 };

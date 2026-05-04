@@ -37,6 +37,7 @@ private:
 	maxiEnv& getEnvelope(int oscillatorId);
 	
 	void render(juce::AudioBuffer<float>& buffer, int startSample, int endSample);
+	void doFilter(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
 	void handleMidiEvent(const juce::MidiMessage& midiMessage);
 	float midiNoteNumberTofrequency(int midiNoteNumber) { return 440.0f * std::powf(2.0f, (midiNoteNumber - 69.0f) / 12.0f); }
 	

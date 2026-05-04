@@ -10,19 +10,31 @@
 
 #include "Filter.h"
 
-void Filter::setIsHighpass(bool highpass)
+void Filter::setFilterType(FilterType filterType)
 {
-	this->isHighpass = highpass;
+	juce::dsp::StateVariableTPTFilterType juceFilterType = static_cast<juce::dsp::StateVariableTPTFilterType>(filterType);
+	
+	if (juceFilterType != dspFilter.getType())
+	{
+		dspFilter.reset();
+	}
+	
+	dspFilter.setType(juceFilterType);
 }
 
-void Filter::setCutoffFrequency(float cutoffFrequency)
+void Filter::setCutoffFrequency(float inCutoffFrequency)
 {
-	this->cutoffFrequency = cutoffFrequency;
+	cutoffFrequency = inCutoffFrequency;
 }
 
-void Filter::setSamplingRate(float samplingRate)
+void Filter::setResonance(float inResonance)
 {
-	this->samplingRate = samplingRate;
+	resonance = inResonance;
+}
+
+void Filter::setSamplingRate(float inSamplingRate)
+{
+	samplingRate = inSamplingRate;
 }
 
 void Filter::prepareToPlay(double inSampleRate, int samplesPerBlock)
@@ -32,7 +44,6 @@ void Filter::prepareToPlay(double inSampleRate, int samplesPerBlock)
 	spec.sampleRate = inSampleRate;
 	spec.numChannels = 2;
 	dspFilter.prepare(spec);
-	dspFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
 }
 
 void Filter::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)

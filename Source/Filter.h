@@ -14,11 +14,22 @@
 #include "JuceHeader.h"
 #include "juce_dsp/processors/juce_StateVariableTPTFilter.h"
 
+enum FilterType
+{
+	LowPass,
+	HighPass,
+	BandPass,
+	
+	FilterType_END
+};
+
 class Filter
 {
 public:
-	void setIsHighpass(bool highpass);
-	void setCutoffFrequency(float cutoffFrequency);
+	void setFilterType(FilterType filterType);
+	void setCutoffFrequency(float inCutoffFrequency);
+	void setResonance(float inResonance);
+	
 	inline float getCutoffFrequency() { return cutoffFrequency; };
 	void setSamplingRate(float samplingRate);
 	
@@ -28,9 +39,9 @@ public:
 	
 private:
 	bool isHighpass = false;
-	float cutoffFrequency = 100.0f;
+	float cutoffFrequency = 20.0f;
 	float samplingRate = 0.0f;;
-	float resonance = 3.0f;
+	float resonance = 1.0f;
 	
 	juce::dsp::StateVariableTPTFilter<float> dspFilter;
 };

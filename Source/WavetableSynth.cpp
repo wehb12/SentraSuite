@@ -63,7 +63,7 @@ void WavetableSynth::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiB
 	
 	render(buffer, currentSample, buffer.getNumSamples());
 	
-	filter.processBlock(buffer, midiMessages);
+	doFilter(buffer, midiMessages);
 }
 
 void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, int endSample)
@@ -91,7 +91,7 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 		}
 		if (env.trigger)
 		{
-			filter.setCutoffFrequency(std::min(filter.getCutoffFrequency() + 2.0f, 100.0f));
+			filter.setCutoffFrequency(std::min(filter.getCutoffFrequency() + 6.0f, 400.0f));
 		}
 	}
 
@@ -103,6 +103,14 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 	
 }
 
+void WavetableSynth::doFilter(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+{
+//	filter.setCutoffFrequency(tree.getRawParameterValue("CUTOFFSLIDER")->load());
+	filter.setResonance(tree.getRawParameterValue("RESONANCESLIDER")->load());
+	filter.setFilterType(static_cast<FilterType>(static_cast<int>(tree.getRawParameterValue("FILTERTYPECOMBOBOX")->load())));
+	filter.processBlock(buffer, midiMessages);
+}
+
 void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 {
 	if (midiEvent.isNoteOn())
@@ -111,6 +119,8 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 		const auto frequency = midiNoteNumberTofrequency(oscillatorId);
 		oscillators[oscillatorId]->setFrequency(frequency);
 		envelopes[oscillatorId].trigger = 1;
+		
+		filter.setCutoffFrequency(20.0f);
 	}
 	else if (midiEvent.isNoteOff())
 	{

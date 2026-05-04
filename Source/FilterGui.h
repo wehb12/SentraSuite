@@ -29,10 +29,14 @@ private:
 	juce::Slider cutoffSlider;
 	juce::Slider resonanceSlider;
 	juce::ComboBox filterTypeComboBox;
+	juce::ToggleButton openFilterButton;
+	juce::Slider openFilterSpeedSlider;
 	
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> cutoffValue;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> resonanceValue;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeComboBoxChoice;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> openFilterButtonState;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> openFilterSpeedValue;
 	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterGui)
 };

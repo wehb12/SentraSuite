@@ -63,13 +63,17 @@ void WavetableSynth::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiB
 	
 	render(buffer, currentSample, buffer.getNumSamples());
 	
-	doFilter(buffer, midiMessages);
+	if (isPlaying)
+	{
+		doFilter(buffer, midiMessages);
+	}
 }
 
 void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, int endSample)
 {
 	float* firstChannel = buffer.getWritePointer(0);
 	
+	isPlaying = false;
 	for (int oscillatorId = 0; oscillatorId < oscillators.size(); ++oscillatorId)
 	{
 		std::shared_ptr<WavetableOscillatorBase> osc = oscillators[oscillatorId];
@@ -77,6 +81,7 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 
 		if (osc->isPlaying())
 		{
+			isPlaying = true;
 			for (int sample = startSample; sample < endSample; ++sample)
 			{
 				const float sampleEnv = env.adsr(osc->getSample(), env.trigger) * 0.1f;
@@ -89,10 +94,10 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 				}
 			}
 		}
-		if (env.trigger)
-		{
-			filter.setCutoffFrequency(std::min(filter.getCutoffFrequency() + 6.0f, 400.0f));
-		}
+//		if (env.trigger)
+//		{
+//			filter.setCutoffFrequency(std::min(filter.getCutoffFrequency() + 6.0f, 400.0f));
+//		}
 	}
 
 	
@@ -105,7 +110,9 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 
 void WavetableSynth::doFilter(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-//	filter.setCutoffFrequency(tree.getRawParameterValue("CUTOFFSLIDER")->load());
+	filter.setCutoffFrequency(tree.getRawParameterValue("CUTOFFSLIDER")->load());
+	filter.setOpenFilter(tree.getRawParameterValue("OPENFILTERSPEEDSTATE")->load() < 0.5f ? false : true);
+	filter.setOpenFilterSpeed(tree.getRawParameterValue("OPENFILTERSPEEDSLIDER")->load());
 	filter.setResonance(tree.getRawParameterValue("RESONANCESLIDER")->load());
 	filter.setFilterType(static_cast<FilterType>(static_cast<int>(tree.getRawParameterValue("FILTERTYPECOMBOBOX")->load())));
 	filter.processBlock(buffer, midiMessages);
@@ -119,8 +126,6 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 		const auto frequency = midiNoteNumberTofrequency(oscillatorId);
 		oscillators[oscillatorId]->setFrequency(frequency);
 		envelopes[oscillatorId].trigger = 1;
-		
-		filter.setCutoffFrequency(20.0f);
 	}
 	else if (midiEvent.isNoteOff())
 	{

@@ -43,6 +43,8 @@ private:
 	
 	juce::AudioProcessorValueTreeState& tree;
 	
+	bool isPlaying = false;
+	
 	double sampleRate;
 	std::vector<std::shared_ptr<WavetableOscillatorBase>> oscillators;
 	std::vector<maxiEnv> envelopes;

@@ -20,11 +20,11 @@ FilterGui::FilterGui(juce::AudioProcessorValueTreeState& tree)
 	cutoffSlider.setRange(20.0f, 20000.0f);
 	cutoffSlider.setValue(200.0f);
 	cutoffSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-	cutoffSlider.setSkewFactorFromMidPoint(1000.0);
+	cutoffSlider.setSkewFactor(0.2f);
 	addAndMakeVisible(&cutoffSlider);
 
 	resonanceSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-	resonanceSlider.setRange(0.5f, 10.0f);
+	resonanceSlider.setRange(0.5f, 5.0f);
 	resonanceSlider.setValue(1.0f);
 	resonanceSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 	addAndMakeVisible(&resonanceSlider);
@@ -36,9 +36,20 @@ FilterGui::FilterGui(juce::AudioProcessorValueTreeState& tree)
 	filterTypeComboBox.setSelectedId(1);
 	addAndMakeVisible(&filterTypeComboBox);
 	
+	openFilterSpeedSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+	openFilterSpeedSlider.setRange(1.0f, 20.0f);
+	openFilterSpeedSlider.setValue(1.0f);
+	openFilterSpeedSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+	addAndMakeVisible(&openFilterSpeedSlider);
+	
+	openFilterButton.setButtonText("Wahh");
+	addAndMakeVisible(openFilterButton);
+	
 	cutoffValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "CUTOFFSLIDER", cutoffSlider);
 	resonanceValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "RESONANCESLIDER", resonanceSlider);
 	filterTypeComboBoxChoice = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(tree, "FILTERTYPECOMBOBOX", filterTypeComboBox);
+	openFilterButtonState = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(tree, "OPENFILTERSPEEDSTATE", openFilterButton);
+	openFilterSpeedValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "OPENFILTERSPEEDSLIDER", openFilterSpeedSlider);
 }
 
 FilterGui::~FilterGui()
@@ -64,6 +75,8 @@ void FilterGui::resized()
 	juce::Rectangle<int> area = getLocalBounds().reduced(40);
 	
 	filterTypeComboBox.setBounds(area.removeFromTop(20));
+	openFilterButton.setBounds(area.removeFromTop(30));
+	openFilterSpeedSlider.setBounds(area.removeFromTop(20));
 	cutoffSlider.setBounds (30, 100, 70, 70);
 	resonanceSlider.setBounds (100, 100, 70, 70);
 }

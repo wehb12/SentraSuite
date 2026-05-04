@@ -30,6 +30,9 @@ public:
 	void setCutoffFrequency(float inCutoffFrequency);
 	void setResonance(float inResonance);
 	
+	void setOpenFilter(bool inOpenFilter);
+	void setOpenFilterSpeed(float inOpenFilterSpeed);
+	
 	inline float getCutoffFrequency() { return cutoffFrequency; };
 	void setSamplingRate(float samplingRate);
 	
@@ -40,8 +43,12 @@ public:
 private:
 	bool isHighpass = false;
 	float cutoffFrequency = 20.0f;
+	float destinationCutoffFrequency = 20.0f;
+	float distanceBetween = 0.0f;
 	float samplingRate = 0.0f;;
 	float resonance = 1.0f;
+	bool openFilter = false;
+	float openFilterSpeed = 0.0f;
 	
 	juce::dsp::StateVariableTPTFilter<float> dspFilter;
 };

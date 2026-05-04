@@ -202,9 +202,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout WavetableSynthAudioProcessor
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("RELEASESLIDER", 1), "ReleaseSlider", juce::NormalisableRange<float>(.1f, 5000.0f), 200.0f));
 	
 	// filter
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("CUTOFFSLIDER", 1), "CutoffSlider", juce::NormalisableRange<float>(20.0f, 20000.0f), 200.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("RESONANCESLIDER", 1), "Resonancelider", juce::NormalisableRange<float>(0.5f, 10.0f), 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("CUTOFFSLIDER", 1), "CutoffSlider", juce::NormalisableRange<float>(20.0f, 20000.0f, 0, 0.2f), 200.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("RESONANCESLIDER", 1), "Resonancelider", juce::NormalisableRange<float>(0.5f, 5.0f), 1.0f));
 	params.push_back(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("FILTERTYPECOMBOBOX", 1), "FilterTypeComboBox", juce::StringArray("Low Pass", "High Pass", "Band Pass", "Test"), 0));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("OPENFILTERSPEEDSLIDER", 1), "OpenFilterSpeedSlider", juce::NormalisableRange<float>(1.0f, 10.0f), 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("OPENFILTERSPEEDSTATE", 1), "OpenFilterSpeedButton", false));
 	
 	return { params.begin(), params.end() };
 }

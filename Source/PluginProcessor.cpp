@@ -11,34 +11,20 @@
 
 //==============================================================================
 WavetableSynthAudioProcessor::WavetableSynthAudioProcessor()
+	:
 #ifndef JucePlugin_PreferredChannelConfigurations
-:
-		AudioProcessor (BusesProperties()
+	  AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ) ,
 #endif
-//		parameters(*this,
-//				   nullptr,
-//				   juce::Identifier("LowpassAndHighpassPlugin"),
-//				   {std::make_unique<juce::AudioParameterFloat>("cutoff_frequency",
-//																"Cutoff Frequency",
-//																juce::NormalisableRange{20.f,
-//																	20000.f,
-//																	0.1f,
-//																	0.2f,
-//																	false},
-//																500.f),
-//					std::make_unique<juce::AudioParameterBool>("highpass",
-//															   "Highpass",
-//															   false)})
+	tree(*this, nullptr, "Parameters", createParameters())
+	, synth(tree)
 {
-//	cutoffFrequencyParameter = parameters.getRawParameterValue("cutoff_frequency");
-//	highpassParameter = parameters.getRawParameterValue("highpass");
 }
 
 WavetableSynthAudioProcessor::~WavetableSynthAudioProcessor()
@@ -200,4 +186,18 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 void WavetableSynthAudioProcessor::reset()
 {
 	synth.reset();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout WavetableSynthAudioProcessor::createParameters()
+{
+	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+	
+	params.push_back(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("TYPECOMBOBOX", 1), "TypeComboBox", juce::StringArray("Sine Wave", "Sqaure Wave"), 1));
+	
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("ATTACKSLIDER", 1), "AttackSlider", juce::NormalisableRange<float>(0.1f, 5000.0f), 500.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("DECAYSLIDER", 1), "DecaySlider", juce::NormalisableRange<float>(1.0f, 2000.0f), 500.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("SUSTAINSLIDER", 1), "SustainSlider", juce::NormalisableRange<float>(0.0f, 1.0f), 0.8f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("RELEASESLIDER", 1), "ReleaseSlider", juce::NormalisableRange<float>(.1f, 5000.0f), 200.0f));
+	
+	return { params.begin(), params.end() };
 }

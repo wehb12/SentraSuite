@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "WavetableTypeSelector.h"
+#include "EnvelopeGui.h"
 
 //==============================================================================
 /**
@@ -17,7 +19,7 @@
 class WavetableSynthAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
-    WavetableSynthAudioProcessorEditor (WavetableSynthAudioProcessor&/*, juce::AudioProcessorValueTreeState& vts*/);
+    WavetableSynthAudioProcessorEditor (WavetableSynthAudioProcessor& processor);
     ~WavetableSynthAudioProcessorEditor() override;
 
     //==============================================================================
@@ -31,5 +33,6 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavetableSynthAudioProcessorEditor)
 	
-	juce::Slider frequencySlider;
+	WavetableTypeSelector wavetableTypeSelector;
+	EnvelopeGui envelopeGui;
 };

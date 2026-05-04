@@ -5,6 +5,14 @@
               headerPath="../../ThirdParty/">
   <MAINGROUP id="IdzQi1" name="WavetableSynth">
     <GROUP id="{3904C17C-26F4-EAF0-38B5-79C73FE8EC26}" name="Source">
+      <GROUP id="{5831E7E9-D94C-A9A3-A493-44AFC4ADA824}" name="UIComponents">
+        <FILE id="nHbIbm" name="EnvelopeGui.cpp" compile="1" resource="0" file="Source/EnvelopeGui.cpp"/>
+        <FILE id="VA5GUv" name="EnvelopeGui.h" compile="0" resource="0" file="Source/EnvelopeGui.h"/>
+        <FILE id="NEfvt6" name="WavetableTypeSelector.cpp" compile="1" resource="0"
+              file="Source/WavetableTypeSelector.cpp"/>
+        <FILE id="HW0PJp" name="WavetableTypeSelector.h" compile="0" resource="0"
+              file="Source/WavetableTypeSelector.h"/>
+      </GROUP>
       <GROUP id="{3992EE4E-FE69-DE73-A628-2D0F86BA80DA}" name="WavtableOscillators">
         <FILE id="bnXmwA" name="SineWaveOscillator.cpp" compile="1" resource="0"
               file="Source/SineWaveOscillator.cpp"/>

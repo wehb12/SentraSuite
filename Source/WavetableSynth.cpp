@@ -9,6 +9,12 @@
 #include "SquareWaveOscillator.h"
 #include "SineWaveOscillator.h"
 
+
+WavetableSynth::WavetableSynth(juce::AudioProcessorValueTreeState& inTree)
+	: tree(inTree)
+{
+}
+
 void WavetableSynth::prepareToPlay(double inSampleRate, int samplesPerBlock)
 {
 	sampleRate = inSampleRate;
@@ -25,10 +31,9 @@ void WavetableSynth::reset()
 	filter.reset();
 }
 
+constexpr auto OSCILLATORS_COUNT = 128;
 void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerBlock)
 {
-	constexpr auto OSCILLATORS_COUNT = 128;
-	
 	oscillators.clear();
 	oscillators.reserve(OSCILLATORS_COUNT);
 	for (int i = 0; i < OSCILLATORS_COUNT; ++i)
@@ -41,6 +46,8 @@ void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerB
 
 void WavetableSynth::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	setOscillators();
+	
 	int currentSample = 0;
 	
 	for (const juce::MidiMessageMetadata midiMessage : midiMessages)
@@ -66,12 +73,8 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 	for (int oscillatorId = 0; oscillatorId < oscillators.size(); ++oscillatorId)
 	{
 		std::shared_ptr<WavetableOscillatorBase> osc = oscillators[oscillatorId];
-		maxiEnv& env = envelopes[oscillatorId];
-		
-		env.setAttack(500);
-		env.setDecay(500);
-		env.setSustain(0.8);
-		env.setRelease(200);
+		maxiEnv& env = getEnvelope(oscillatorId);
+
 		if (osc->isPlaying())
 		{
 			for (int sample = startSample; sample < endSample; ++sample)
@@ -122,4 +125,50 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 			envelopes[oscillatorId].trigger = 0;
 		}
 	}
+}
+
+void WavetableSynth::setOscillators()
+{
+	const WavetableType newType = static_cast<WavetableType>(static_cast<int>(tree.getParameter("TYPECOMBOBOX")->getValue()));
+	if (oscType != newType)
+	{
+		oscType = newType;
+		switch(oscType)
+		{
+			case SineWave:
+					oscillators.clear();
+					oscillators.reserve(OSCILLATORS_COUNT);
+					for (int i = 0; i < OSCILLATORS_COUNT; ++i)
+					{
+						oscillators.emplace_back(std::make_shared<SineWaveOscillator>());
+						oscillators.back()->init(sampleRate);
+						envelopes.emplace_back();
+					}
+				break;
+			case SquareWave:
+					oscillators.clear();
+					oscillators.reserve(OSCILLATORS_COUNT);
+					for (int i = 0; i < OSCILLATORS_COUNT; ++i)
+					{
+						oscillators.emplace_back(std::make_shared<SquareWaveOscillator>());
+						oscillators.back()->init(sampleRate);
+						envelopes.emplace_back();
+					}
+				break;
+			default:
+				break;
+		}
+	}
+}
+
+maxiEnv& WavetableSynth::getEnvelope(int oscillatorId)
+{
+	maxiEnv& env = envelopes[oscillatorId];
+	
+	env.setAttack(tree.getRawParameterValue("ATTACKSLIDER")->load());
+	env.setDecay(tree.getRawParameterValue("DECAYSLIDER")->load());
+	env.setSustain(tree.getRawParameterValue("SUSTAINSLIDER")->load());
+	env.setRelease(tree.getRawParameterValue("RELEASESLIDER")->load());
+	
+	return env;
 }

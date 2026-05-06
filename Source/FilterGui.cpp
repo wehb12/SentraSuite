@@ -44,12 +44,16 @@ FilterGui::FilterGui(juce::AudioProcessorValueTreeState& tree)
 	
 	openFilterButton.setButtonText("Wahh");
 	addAndMakeVisible(openFilterButton);
+
+	keyTrackButton.setButtonText("KeyTrk");
+	addAndMakeVisible(keyTrackButton);
 	
 	cutoffValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "CUTOFFSLIDER", cutoffSlider);
 	resonanceValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "RESONANCESLIDER", resonanceSlider);
 	filterTypeComboBoxChoice = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(tree, "FILTERTYPECOMBOBOX", filterTypeComboBox);
-	openFilterButtonState = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(tree, "OPENFILTERSPEEDSTATE", openFilterButton);
+	openFilterButtonState = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(tree, "OPENFILTERSTATE", openFilterButton);
 	openFilterSpeedValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "OPENFILTERSPEEDSLIDER", openFilterSpeedSlider);
+	keyTrackButtonState = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(tree, "KEYTRACKSTATE", keyTrackButton);
 }
 
 FilterGui::~FilterGui()
@@ -72,11 +76,18 @@ void FilterGui::paint (juce::Graphics& g)
 
 void FilterGui::resized()
 {
-	juce::Rectangle<int> area = getLocalBounds().reduced(40);
+	juce::Rectangle<int> area = getLocalBounds().reduced(35);
 	
 	filterTypeComboBox.setBounds(area.removeFromTop(20));
-	openFilterButton.setBounds(area.removeFromTop(30));
+	
+	area.removeFromTop(5);
+	juce::Rectangle<int> buttons = area.removeFromTop(20);
+	openFilterButton.setBounds(buttons.removeFromLeft(65));
+	keyTrackButton.setBounds(buttons);
+	
 	openFilterSpeedSlider.setBounds(area.removeFromTop(20));
-	cutoffSlider.setBounds (30, 100, 70, 70);
-	resonanceSlider.setBounds (100, 100, 70, 70);
+	
+	area.expand(10, 10);
+	cutoffSlider.setBounds(area.removeFromLeft(75));
+	resonanceSlider.setBounds(area);
 }

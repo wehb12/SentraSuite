@@ -206,7 +206,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout WavetableSynthAudioProcessor
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("RESONANCESLIDER", 1), "Resonancelider", juce::NormalisableRange<float>(0.5f, 5.0f), 1.0f));
 	params.push_back(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("FILTERTYPECOMBOBOX", 1), "FilterTypeComboBox", juce::StringArray("Low Pass", "High Pass", "Band Pass", "Test"), 0));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("OPENFILTERSPEEDSLIDER", 1), "OpenFilterSpeedSlider", juce::NormalisableRange<float>(1.0f, 10.0f), 1.0f));
-	params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("OPENFILTERSPEEDSTATE", 1), "OpenFilterSpeedButton", false));
+	params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("OPENFILTERSTATE", 1), "OpenFilterSpeedButton", false));
+	params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("KEYTRACKSTATE", 1), "KeyTackButton", false));
 	
 	return { params.begin(), params.end() };
 }

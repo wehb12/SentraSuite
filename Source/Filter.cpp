@@ -9,6 +9,7 @@
  */
 
 #include "Filter.h"
+#include <cmath>
 
 void Filter::setFilterType(FilterType filterType)
 {
@@ -69,6 +70,26 @@ void Filter::setOpenFilterSpeed(float inOpenFilterSpeed)
 	openFilterSpeed = inOpenFilterSpeed;
 }
 
+void Filter::setKeyTrack(bool inKeyTrack)
+{
+	// turning off
+	if (keyTrack && !inKeyTrack)
+	{
+//		cutoffFrequency = destinationCutoffFrequency;
+//		destinationCutoffFrequency = 20.0f;
+//		distanceBetween = 0.0f;
+	}
+	// turning on
+	else if (!keyTrack && inKeyTrack)
+	{
+//		destinationCutoffFrequency = cutoffFrequency;
+//		cutoffFrequency = 20.0f;
+//		distanceBetween = destinationCutoffFrequency - cutoffFrequency;
+	}
+	
+	keyTrack = inKeyTrack;
+}
+
 void Filter::setSamplingRate(float inSamplingRate)
 {
 	samplingRate = inSamplingRate;
@@ -89,13 +110,23 @@ void Filter::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& mi
 	{
 		const juce::MidiMessage midiEvent = midiMessage.getMessage();
 		
-		if (midiEvent.isNoteOn() && openFilter)
+		if (midiEvent.isNoteOn())
 		{
-			cutoffFrequency = 20.0f;
+			if (keyTrack)
+			{
+				constexpr float a4Freq = 440.0f;
+				constexpr float a4Num = 69;
+				constexpr float semitonesInOctave = 12;
+				midiNoteFreq = a4Freq * std::pow(2, ((midiEvent.getNoteNumber() - a4Num) / semitonesInOctave));
+			}
+			if (openFilter)
+			{
+				cutoffFrequency = 20.0f;
+			}
 		}
 	}
 	
-	dspFilter.setCutoffFrequency(cutoffFrequency);
+	dspFilter.setCutoffFrequency(cutoffFrequency + (keyTrack ? midiNoteFreq : 0.0f));
 	dspFilter.setResonance(resonance);
 	juce::dsp::AudioBlock<float> block(buffer);
 	juce::dsp::ProcessContextReplacing<float> context(block);
@@ -107,7 +138,6 @@ void Filter::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& mi
 		cutoffFrequency += increment;
 		cutoffFrequency = std::min(cutoffFrequency, destinationCutoffFrequency);
 	}
-		
 }
 
 void Filter::reset()

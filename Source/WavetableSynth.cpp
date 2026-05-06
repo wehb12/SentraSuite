@@ -111,8 +111,9 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 void WavetableSynth::doFilter(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	filter.setCutoffFrequency(tree.getRawParameterValue("CUTOFFSLIDER")->load());
-	filter.setOpenFilter(tree.getRawParameterValue("OPENFILTERSPEEDSTATE")->load() < 0.5f ? false : true);
+	filter.setOpenFilter(tree.getRawParameterValue("OPENFILTERSTATE")->load() < 0.5f ? false : true);
 	filter.setOpenFilterSpeed(tree.getRawParameterValue("OPENFILTERSPEEDSLIDER")->load());
+	filter.setKeyTrack(tree.getRawParameterValue("KEYTRACKSTATE")->load() < 0.5f ? false : true);
 	filter.setResonance(tree.getRawParameterValue("RESONANCESLIDER")->load());
 	filter.setFilterType(static_cast<FilterType>(static_cast<int>(tree.getRawParameterValue("FILTERTYPECOMBOBOX")->load())));
 	filter.processBlock(buffer, midiMessages);

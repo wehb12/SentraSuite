@@ -31,12 +31,14 @@ private:
 	juce::ComboBox filterTypeComboBox;
 	juce::ToggleButton openFilterButton;
 	juce::Slider openFilterSpeedSlider;
+	juce::ToggleButton keyTrackButton;
 	
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> cutoffValue;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> resonanceValue;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeComboBoxChoice;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> openFilterButtonState;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> openFilterSpeedValue;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> keyTrackButtonState;
 	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterGui)
 };

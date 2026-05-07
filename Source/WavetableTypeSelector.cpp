@@ -19,6 +19,7 @@ WavetableTypeSelector::WavetableTypeSelector(juce::AudioProcessorValueTreeState&
 	typeComboBox.setJustificationType(juce::Justification::centred);
 	typeComboBox.addItem("Sine Wave", 1);
 	typeComboBox.addItem("Square Wave", 2);
+	typeComboBox.addItem("Saw Wave", 3);
 	typeComboBox.setSelectedId (2);
 	addAndMakeVisible(&typeComboBox);
 	

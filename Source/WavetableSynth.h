@@ -18,6 +18,7 @@ enum WavetableType
 {
 	SineWave = 0,
 	SquareWave,
+	SawWave,
 	
 	WavetableType_END
 };
@@ -33,6 +34,19 @@ public:
 	
 private:
 	void initialiseOsciallators(double inSampleRate, int samplesPerBlock);
+	
+	template<class OscType> void setOscillator()
+	{
+		oscillators.clear();
+		oscillators.reserve(OSCILLATORS_COUNT);
+		for (int i = 0; i < OSCILLATORS_COUNT; ++i)
+		{
+			oscillators.emplace_back(std::make_shared<OscType>());
+			oscillators.back()->init(sampleRate);
+			envelopes.emplace_back();
+		}
+	}
+	
 	void setOscillators();
 	maxiEnv& getEnvelope(int oscillatorId);
 	
@@ -52,4 +66,6 @@ private:
 	Filter filter;
 	
 	WavetableType oscType = SineWave;
+	
+	static constexpr auto OSCILLATORS_COUNT = 128;
 };

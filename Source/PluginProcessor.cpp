@@ -199,7 +199,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout WavetableSynthAudioProcessor
 	std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 	
 	// wavetable oscillator type
-	params.push_back(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("TYPECOMBOBOX", 1), "TypeComboBox", juce::StringArray("Sine Wave", "Sqaure Wave"), 1));
+	params.push_back(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("TYPECOMBOBOX", 1), "TypeComboBox", juce::StringArray("Sine Wave", "Square Wave", "Saw Wave"), 1));
 	
 	// envelope
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("ATTACKSLIDER", 1), "AttackSlider", juce::NormalisableRange<float>(0.1f, 5000.0f), 500.0f));

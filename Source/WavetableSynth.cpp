@@ -8,6 +8,7 @@
 #include "WavetableSynth.h"
 #include "SquareWaveOscillator.h"
 #include "SineWaveOscillator.h"
+#include "SawWaveOscillator.h"
 
 
 WavetableSynth::WavetableSynth(juce::AudioProcessorValueTreeState& inTree)
@@ -31,7 +32,6 @@ void WavetableSynth::reset()
 	filter.reset();
 }
 
-constexpr auto OSCILLATORS_COUNT = 128;
 void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerBlock)
 {
 	oscillators.clear();
@@ -94,10 +94,6 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 				}
 			}
 		}
-//		if (env.trigger)
-//		{
-//			filter.setCutoffFrequency(std::min(filter.getCutoffFrequency() + 6.0f, 400.0f));
-//		}
 	}
 
 	
@@ -145,31 +141,20 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 
 void WavetableSynth::setOscillators()
 {
-	const WavetableType newType = static_cast<WavetableType>(static_cast<int>(tree.getParameter("TYPECOMBOBOX")->getValue()));
+	const WavetableType newType = static_cast<WavetableType>(static_cast<int>(tree.getRawParameterValue("TYPECOMBOBOX")->load()));
 	if (oscType != newType)
 	{
 		oscType = newType;
 		switch(oscType)
 		{
 			case SineWave:
-					oscillators.clear();
-					oscillators.reserve(OSCILLATORS_COUNT);
-					for (int i = 0; i < OSCILLATORS_COUNT; ++i)
-					{
-						oscillators.emplace_back(std::make_shared<SineWaveOscillator>());
-						oscillators.back()->init(sampleRate);
-						envelopes.emplace_back();
-					}
+					setOscillator<SineWaveOscillator>();
 				break;
 			case SquareWave:
-					oscillators.clear();
-					oscillators.reserve(OSCILLATORS_COUNT);
-					for (int i = 0; i < OSCILLATORS_COUNT; ++i)
-					{
-						oscillators.emplace_back(std::make_shared<SquareWaveOscillator>());
-						oscillators.back()->init(sampleRate);
-						envelopes.emplace_back();
-					}
+					setOscillator<SquareWaveOscillator>();
+				break;
+			case SawWave:
+					setOscillator<SawWaveOscillator>();
 				break;
 			default:
 				break;

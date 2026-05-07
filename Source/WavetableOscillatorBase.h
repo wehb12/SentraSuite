@@ -37,4 +37,6 @@ protected:
 	double sampleRate = 0.0;
 	float index = 0.0f;
 	float indexIncrement = 0.0f;
+	
+	static constexpr int WAVETABLE_LENGTH = 64;
 };

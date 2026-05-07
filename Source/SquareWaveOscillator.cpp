@@ -13,7 +13,6 @@
 
 void SquareWaveOscillator::generateWavetable()
 {
-	constexpr int WAVETABLE_LENGTH = 64;
 	waveTable.reserve(WAVETABLE_LENGTH);
 	
 	for (int i = 0; i < (WAVETABLE_LENGTH / 2); ++i)

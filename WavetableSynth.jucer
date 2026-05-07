@@ -16,6 +16,10 @@
               file="Source/WavetableTypeSelector.h"/>
       </GROUP>
       <GROUP id="{3992EE4E-FE69-DE73-A628-2D0F86BA80DA}" name="WavtableOscillators">
+        <FILE id="ldNIM2" name="SawWaveOscillator.cpp" compile="1" resource="0"
+              file="Source/SawWaveOscillator.cpp"/>
+        <FILE id="zeLwZ1" name="SawWaveOscillator.h" compile="0" resource="0"
+              file="Source/SawWaveOscillator.h"/>
         <FILE id="bnXmwA" name="SineWaveOscillator.cpp" compile="1" resource="0"
               file="Source/SineWaveOscillator.cpp"/>
         <FILE id="Lou49C" name="SineWaveOscillator.h" compile="0" resource="0"

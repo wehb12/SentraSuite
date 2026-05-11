@@ -37,6 +37,8 @@ private:
 	
 	template<class OscType> void setOscillator()
 	{
+		envelopes.clear();
+		envelopes.reserve(OSCILLATORS_COUNT);
 		oscillators.clear();
 		oscillators.reserve(OSCILLATORS_COUNT);
 		for (int i = 0; i < OSCILLATORS_COUNT; ++i)
@@ -47,8 +49,23 @@ private:
 		}
 	}
 	
+	template<class OscType> void setSecondaryOscillator()
+	{
+		secondaryEnvelopes.clear();
+		secondaryEnvelopes.reserve(OSCILLATORS_COUNT);
+		secondaryOscillators.clear();
+		secondaryOscillators.reserve(OSCILLATORS_COUNT);
+		for (int i = 0; i < OSCILLATORS_COUNT; ++i)
+		{
+			secondaryOscillators.emplace_back(std::make_shared<OscType>());
+			secondaryOscillators.back()->init(sampleRate);
+			secondaryEnvelopes.emplace_back();
+		}
+	}
+	
 	void setOscillators();
 	maxiEnv& getEnvelope(int oscillatorId);
+	maxiEnv& getEnvelope2(int oscillatorId);
 	
 	void render(juce::AudioBuffer<float>& buffer, int startSample, int endSample);
 	void doFilter(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
@@ -61,11 +78,16 @@ private:
 	
 	double sampleRate;
 	std::vector<std::shared_ptr<WavetableOscillatorBase>> oscillators;
+	std::vector<std::shared_ptr<WavetableOscillatorBase>> secondaryOscillators;
 	std::vector<maxiEnv> envelopes;
+	std::vector<maxiEnv> secondaryEnvelopes;
 	
 	Filter filter;
 	
 	WavetableType oscType = SineWave;
+	bool secondOscActive = false;
+	WavetableType secondOscType = SineWave;
+	float secondOscAmount = 0.0f;
 	
 	static constexpr auto OSCILLATORS_COUNT = 128;
 };

@@ -26,9 +26,17 @@ public:
     void resized() override;
 
 private:
+	void addOscsToComboBox(juce::ComboBox& comboBox);
+	
 	juce::ComboBox typeComboBox;
+	juce::ToggleButton secondOscButton;
+	juce::Slider secondOscAmount;
+	juce::ComboBox secondOscTypeComboBox;
 	
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> typeComboBoxChoice;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> secondOscButtonState;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> secondOscAmountValue;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> secondOscTypeComboBoxChoice;
 	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavetableTypeSelector)
 };

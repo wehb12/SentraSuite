@@ -17,10 +17,10 @@ void SquareWaveOscillator::generateWavetable()
 	
 	for (int i = 0; i < (WAVETABLE_LENGTH / 2); ++i)
 	{
-		waveTable.emplace_back(-1);
+		waveTable.emplace_back(1);
 	}
 	for (int i = (WAVETABLE_LENGTH / 2); i < WAVETABLE_LENGTH; ++i)
 	{
-		waveTable.emplace_back(1);
+		waveTable.emplace_back(-1);
 	}
 }

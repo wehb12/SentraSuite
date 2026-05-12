@@ -70,7 +70,7 @@ private:
 	void render(juce::AudioBuffer<float>& buffer, int startSample, int endSample);
 	void doFilter(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
 	void handleMidiEvent(const juce::MidiMessage& midiMessage);
-	float midiNoteNumberTofrequency(int midiNoteNumber) { return 440.0f * std::powf(2.0f, (midiNoteNumber - 69.0f) / 12.0f); }
+	float midiNoteNumberTofrequency(int midiNoteNumber, float semitoneChange = 0.0f) { return 440.0f * std::powf(2.0f, (midiNoteNumber + semitoneChange - 69.0f) / 12.0f); }
 	
 	juce::AudioProcessorValueTreeState& tree;
 	
@@ -84,10 +84,11 @@ private:
 	
 	Filter filter;
 	
-	WavetableType oscType = SineWave;
-	bool secondOscActive = false;
-	WavetableType secondOscType = SineWave;
+	WavetableType oscType = SquareWave;
+	WavetableType secondOscType = SawWave;
 	float secondOscAmount = 0.0f;
+	float oscSemitoneAmount = 0.0f;
+	float secondOscSemitoneAmount = 0.0f;
 	
 	static constexpr auto OSCILLATORS_COUNT = 128;
 };

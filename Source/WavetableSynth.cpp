@@ -136,9 +136,10 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 	if (midiEvent.isNoteOn())
 	{
 		const int oscillatorId = midiEvent.getNoteNumber();
-		const auto frequency = midiNoteNumberTofrequency(oscillatorId);
-		oscillators[oscillatorId]->setFrequency(frequency);
-		secondaryOscillators[oscillatorId]->setFrequency(frequency);
+		const float frequency1 = midiNoteNumberTofrequency(oscillatorId, oscSemitoneAmount);
+		const float frequency2 = midiNoteNumberTofrequency(oscillatorId, secondOscSemitoneAmount);
+		oscillators[oscillatorId]->setFrequency(frequency1);
+		secondaryOscillators[oscillatorId]->setFrequency(frequency2);
 		envelopes[oscillatorId].trigger = 1;
 		secondaryEnvelopes[oscillatorId].trigger = 1;
 	}
@@ -160,7 +161,6 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 
 void WavetableSynth::setOscillators()
 {
-	secondOscActive = tree.getRawParameterValue("SECONDOSCBUTTONSTATE")->load() < 0.5f ? false : true;
 	const WavetableType newType = static_cast<WavetableType>(static_cast<int>(tree.getRawParameterValue("TYPECOMBOBOX")->load()));
 	if (oscType != newType)
 	{
@@ -181,28 +181,53 @@ void WavetableSynth::setOscillators()
 		}
 	}
 	
-	if (secondOscActive)
+	const WavetableType newSecondaryType = static_cast<WavetableType>(static_cast<int>(tree.getRawParameterValue("SECONDOSCTYPECOMBOBOX")->load()));
+	secondOscAmount = tree.getRawParameterValue("SECONDOSCAMOUNT")->load();
+	if (secondOscType != newSecondaryType)
 	{
-		const WavetableType newSecondaryType = static_cast<WavetableType>(static_cast<int>(tree.getRawParameterValue("SECONDOSCTYPECOMBOBOX")->load()));
-		secondOscAmount = tree.getRawParameterValue("SECONDOSCAMOUNT")->load();
-		if (secondOscType != newSecondaryType)
+		secondOscType = newSecondaryType;
+		switch(secondOscType)
 		{
-			secondOscType = newSecondaryType;
-			switch(secondOscType)
-			{
-				case SineWave:
-						setSecondaryOscillator<SineWaveOscillator>();
-					break;
-				case SquareWave:
-						setSecondaryOscillator<SquareWaveOscillator>();
-					break;
-				case SawWave:
-						setSecondaryOscillator<SawWaveOscillator>();
-					break;
-				default:
-					break;
-			}
+			case SineWave:
+					setSecondaryOscillator<SineWaveOscillator>();
+				break;
+			case SquareWave:
+					setSecondaryOscillator<SquareWaveOscillator>();
+				break;
+			case SawWave:
+					setSecondaryOscillator<SawWaveOscillator>();
+				break;
+			default:
+				break;
 		}
+	}
+	
+	const float newOscSemitoneAmount = tree.getRawParameterValue("OSCSEMITONEAMOUNT")->load();
+	const float newSecondOscSemitoneAmount = tree.getRawParameterValue("SECONDOSCSEMITONEAMOUNT")->load();
+	
+	bool newSemitoneAmount = false;
+	if (newOscSemitoneAmount != oscSemitoneAmount)
+	{
+		oscSemitoneAmount = newOscSemitoneAmount;
+		for (int oscillatorId = 0; oscillatorId < oscillators.size(); ++oscillatorId)
+		{
+			oscillators[oscillatorId]->setFrequency(midiNoteNumberTofrequency(oscillatorId, oscSemitoneAmount));
+		}
+		newSemitoneAmount = true;
+	}
+	if (newSecondOscSemitoneAmount != secondOscSemitoneAmount)
+	{
+		secondOscSemitoneAmount = newSecondOscSemitoneAmount;
+		for (int oscillatorId = 0; oscillatorId < oscillators.size(); ++oscillatorId)
+		{
+			secondaryOscillators[oscillatorId]->setFrequency(midiNoteNumberTofrequency(oscillatorId, secondOscSemitoneAmount));
+		}
+		newSemitoneAmount = true;
+	}
+
+	if (newSemitoneAmount)
+	{
+		filter.setSemitoneAmount(std::min(oscSemitoneAmount, secondOscSemitoneAmount));
 	}
 }
 

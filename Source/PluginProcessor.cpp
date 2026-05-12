@@ -200,9 +200,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout WavetableSynthAudioProcessor
 	
 	// wavetable oscillator type
 	params.push_back(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("TYPECOMBOBOX", 1), "TypeComboBox", juce::StringArray("Sine Wave", "Square Wave", "Saw Wave"), 1));
-	params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("SECONDOSCBUTTONSTATE", 1), "SecondOscButtonState", false));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("SECONDOSCAMOUNT", 1), "SecondOscAmount", juce::NormalisableRange<float>(0.0f, 1.0f), 0.0f));
 	params.push_back(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("SECONDOSCTYPECOMBOBOX", 1), "SecondOscTypeComboBox", juce::StringArray("Sine Wave", "Square Wave", "Saw Wave"), 2));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("OSCSEMITONEAMOUNT", 1), "OscSemitoneAmount", juce::NormalisableRange<float>(-48.0f, 48.0f, 1.0f), 0.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("SECONDOSCSEMITONEAMOUNT", 1), "SecondOscSemitoneAmount", juce::NormalisableRange<float>(-48.0f, 48.0f, 1.0f), 0.0f));
 	
 	// envelope
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("ATTACKSLIDER", 1), "AttackSlider", juce::NormalisableRange<float>(0.1f, 5000.0f), 500.0f));

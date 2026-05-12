@@ -18,22 +18,31 @@ WavetableTypeSelector::WavetableTypeSelector(juce::AudioProcessorValueTreeState&
 	
 	addOscsToComboBox(typeComboBox);
 	
-	secondOscButton.setButtonText("2nd Osc");
-	addAndMakeVisible(secondOscButton);
+	oscSemitoneAmount.setSliderStyle(juce::Slider::SliderStyle::IncDecButtons);
+	oscSemitoneAmount.setRange(-48.0f, 48.0f, 1.0f);
+	oscSemitoneAmount.setValue(0.0f);
+	oscSemitoneAmount.setIncDecButtonsMode(juce::Slider::IncDecButtonMode::incDecButtonsDraggable_Vertical);
+	addAndMakeVisible(&oscSemitoneAmount);
 	
 	secondOscAmount.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
 	secondOscAmount.setRange(0.0f, 1.0f);
 	secondOscAmount.setValue(0.0f);
 	secondOscAmount.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-	secondOscAmount.setSkewFactor(0.2f);
 	addAndMakeVisible(&secondOscAmount);
 	
 	addOscsToComboBox(secondOscTypeComboBox);
 	
+	secondOscSemitoneAmount.setSliderStyle(juce::Slider::SliderStyle::IncDecButtons);
+	secondOscSemitoneAmount.setRange(-48.0f, 48.0f, 1.0f);
+	secondOscSemitoneAmount.setValue(0.0f);
+	secondOscSemitoneAmount.setIncDecButtonsMode(juce::Slider::IncDecButtonMode::incDecButtonsDraggable_Vertical);
+	addAndMakeVisible(&secondOscSemitoneAmount);
+	
 	typeComboBoxChoice = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(tree, "TYPECOMBOBOX", typeComboBox);
-	secondOscButtonState = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(tree, "SECONDOSCBUTTONSTATE", secondOscButton);
 	secondOscAmountValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "SECONDOSCAMOUNT", secondOscAmount);
 	secondOscTypeComboBoxChoice = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(tree, "SECONDOSCTYPECOMBOBOX", secondOscTypeComboBox);
+	oscSemitoneValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "OSCSEMITONEAMOUNT", oscSemitoneAmount);
+	secondOscSemitoneValue = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(tree, "SECONDOSCSEMITONEAMOUNT", secondOscSemitoneAmount);
 }
 
 WavetableTypeSelector::~WavetableTypeSelector()
@@ -70,8 +79,8 @@ void WavetableTypeSelector::resized()
 	juce::Rectangle<int> area = getLocalBounds().reduced(35);
 	
 	typeComboBox.setBounds(area.removeFromTop(20));
-	area.removeFromTop(5);
-	secondOscButton.setBounds(area.removeFromTop(20));
-	secondOscAmount.setBounds(area.removeFromTop(60));
-	secondOscTypeComboBox.setBounds(area.removeFromTop(20));
+	secondOscTypeComboBox.setBounds(area.removeFromBottom(20));
+	secondOscAmount.setBounds(area.removeFromLeft(65));
+	oscSemitoneAmount.setBounds(area.removeFromTop(30));
+	secondOscSemitoneAmount.setBounds(area.removeFromBottom(30));
 }

@@ -90,6 +90,11 @@ void Filter::setKeyTrack(bool inKeyTrack)
 	keyTrack = inKeyTrack;
 }
 
+void Filter::setSemitoneAmount(float inSemitoneAmount)
+{
+	semitoneAmount = inSemitoneAmount;
+}
+
 void Filter::setSamplingRate(float inSamplingRate)
 {
 	samplingRate = inSamplingRate;
@@ -117,7 +122,7 @@ void Filter::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& mi
 				constexpr float a4Freq = 440.0f;
 				constexpr float a4Num = 69;
 				constexpr float semitonesInOctave = 12;
-				midiNoteFreq = a4Freq * std::pow(2, ((midiEvent.getNoteNumber() - a4Num) / semitonesInOctave));
+				midiNoteFreq = a4Freq * std::pow(2, ((midiEvent.getNoteNumber() + semitoneAmount - a4Num) / semitonesInOctave));
 			}
 			if (openFilter)
 			{

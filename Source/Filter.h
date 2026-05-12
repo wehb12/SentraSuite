@@ -34,6 +34,7 @@ public:
 	void setOpenFilterSpeed(float inOpenFilterSpeed);
 	
 	void setKeyTrack(bool inKeyTrack);
+	void setSemitoneAmount(float inSemitoneAmount);
 	
 	inline float getCutoffFrequency() { return cutoffFrequency; };
 	void setSamplingRate(float samplingRate);
@@ -52,6 +53,7 @@ private:
 	bool openFilter = false;
 	float openFilterSpeed = 0.0f;
 	bool keyTrack = false;
+	float semitoneAmount = 0.0f;
 	float midiNoteFreq = 0.0f;
 	
 	juce::dsp::StateVariableTPTFilter<float> dspFilter;

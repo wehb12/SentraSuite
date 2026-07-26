@@ -64,13 +64,17 @@ private:
 	}
 	
 	void setOscillators();
+	void buildUnisonOscillators(bool forceResetOscs = false);
 	maxiEnv& getEnvelope(int oscillatorId);
 	maxiEnv& getEnvelope2(int oscillatorId);
 	
 	void render(juce::AudioBuffer<float>& buffer, int startSample, int endSample);
 	void doFilter(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages);
 	void handleMidiEvent(const juce::MidiMessage& midiMessage);
-	float midiNoteNumberTofrequency(int midiNoteNumber, float semitoneChange = 0.0f) { return 440.0f * std::powf(2.0f, (midiNoteNumber + semitoneChange - 69.0f) / 12.0f); }
+	float midiNoteNumberTofrequency(int midiNoteNumber, float semitoneChange = 0.0f, float detuneAmount = 0.0f)
+	{
+		return 440.0f * std::powf(2.0f, (midiNoteNumber + semitoneChange + (detuneAmount / 100.0f) - 69.0f) / 12.0f);
+	}
 	
 	juce::AudioProcessorValueTreeState& tree;
 	
@@ -81,6 +85,11 @@ private:
 	std::vector<std::shared_ptr<WavetableOscillatorBase>> secondaryOscillators;
 	std::vector<maxiEnv> envelopes;
 	std::vector<maxiEnv> secondaryEnvelopes;
+	
+	std::vector<std::shared_ptr<WavetableOscillatorBase>> unisonOscillators;
+	float unisonNumVoices = 1.0f;
+	float unisonDetuneAmount = 0.0f;
+	float unisonStereoAmount = 0.0f;
 	
 	Filter filter;
 	

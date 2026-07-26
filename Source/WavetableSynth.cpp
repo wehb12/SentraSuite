@@ -9,6 +9,7 @@
 #include "SquareWaveOscillator.h"
 #include "SineWaveOscillator.h"
 #include "SawWaveOscillator.h"
+#include "UIKeyNames.h"
 
 
 WavetableSynth::WavetableSynth(juce::AudioProcessorValueTreeState& inTree)
@@ -54,6 +55,7 @@ void WavetableSynth::initialiseOsciallators(double inSampleRate, int samplesPerB
 void WavetableSynth::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	setOscillators();
+	buildUnisonOscillators();
 	
 	int currentSample = 0;
 	
@@ -93,14 +95,39 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 			isPlaying = true;
 			for (int sample = startSample; sample < endSample; ++sample)
 			{
-				const float sampleEnv1 = env1.adsr(osc1->getSample(), env1.trigger) * 0.1f;
+				float osc1SampleLeft = 0.0f;
+				float osc1SampleRight = 0.0f;
+				for (int i = 0; i < unisonNumVoices; ++i)
+				{
+					const float middleIndex = std::floor(unisonNumVoices / 2);
+					const bool noBias = (i == middleIndex) && ((unisonNumVoices / 2.0f) - middleIndex) > 0.0f;
+					
+					float leftChannelMultipler = 1.0f;
+					float rightChannelMultipler = 1.0f;
+					if (!noBias)
+					{
+						const bool leftBias = i < middleIndex;
+						const float unisonStereoMultiplier = (unisonStereoAmount / 200.0f) + 0.5f;
+						leftChannelMultipler = leftBias ? unisonStereoMultiplier : (1.0f - unisonStereoMultiplier);
+						rightChannelMultipler = leftBias ? (1.0f - unisonStereoMultiplier) : unisonStereoMultiplier;
+					}
+					
+					const float sample = unisonOscillators[i]->getSample();
+					osc1SampleLeft += sample * leftChannelMultipler;
+					osc1SampleRight += sample * rightChannelMultipler;
+				}
+				
+				const float sampleEnv1Left = env1.adsr((osc1SampleLeft / 1.0f), env1.trigger) * 0.1f;
+				const float sampleEnv1Right = env1.adsr((osc1SampleRight / 1.0f), env1.trigger) * 0.1f;
+				
 				const float sampleEnv2 = env2.adsr(osc2->getSample(), env2.trigger) * 0.1f;
 				
-				firstChannel[sample] += ((sampleEnv1 * (1.0f - secondOscAmount)) + (sampleEnv2 * secondOscAmount));
+				firstChannel[sample] += ((sampleEnv1Left * (1.0f - secondOscAmount)) + (sampleEnv2 * secondOscAmount));
+				buffer.getWritePointer(1)[sample] += ((sampleEnv1Right * (1.0f - secondOscAmount)) + (sampleEnv2 * secondOscAmount));
 				
 				// This stopping code doesn't work properly and is buggy
 				// TODO: Swap to some sort of timer based on the release value and the time the key was pressed. Maybe some envelope wrapper class could handle it
-				if (env1.trigger == 0 && (sampleEnv1 < 0.000001 && sampleEnv1 > -0.000001))
+				if (env1.trigger == 0 && (sampleEnv1Left < 0.000001 && sampleEnv1Left > -0.000001))
 				{
 					osc1->stop();
 				}
@@ -113,10 +140,10 @@ void WavetableSynth::render(juce::AudioBuffer<float>& buffer, int startSample, i
 	}
 
 	
-	for(int channel = 1; channel < buffer.getNumChannels(); ++channel)
-	{
-		std::copy(firstChannel + startSample, firstChannel + endSample, buffer.getWritePointer(channel) + startSample);
-	}
+//	for(int channel = 1; channel < buffer.getNumChannels(); ++channel)
+//	{
+//		std::copy(firstChannel + startSample, firstChannel + endSample, buffer.getWritePointer(channel) + startSample);
+//	}
 	
 }
 
@@ -142,6 +169,20 @@ void WavetableSynth::handleMidiEvent(const juce::MidiMessage& midiEvent)
 		secondaryOscillators[oscillatorId]->setFrequency(frequency2);
 		envelopes[oscillatorId].trigger = 1;
 		secondaryEnvelopes[oscillatorId].trigger = 1;
+		
+		const float unisonVoiceFreqNext = midiNoteNumberTofrequency(oscillatorId, oscSemitoneAmount, unisonDetuneAmount);
+		const float detuneAmount = unisonVoiceFreqNext - frequency1;
+		
+		// TODO: this is a temp fix to clear the unison oscialltors every time a new midi note is pressed
+		// It stops artifacts from last midi note sharing the same unison oscillators
+		// We should instead have one unison group per potentital midi voice
+		buildUnisonOscillators(true);
+		for (int i = 0; i < unisonNumVoices; ++i)
+		{
+			const float detuneMultiplier = i - std::floor(unisonNumVoices / 2);
+			const float unisonVoiceFrequency = frequency1 + (detuneMultiplier * detuneAmount);
+			unisonOscillators[i]->setFrequency(unisonVoiceFrequency);
+		}
 	}
 	else if (midiEvent.isNoteOff())
 	{
@@ -179,6 +220,9 @@ void WavetableSynth::setOscillators()
 			default:
 				break;
 		}
+		
+		constexpr bool forceResetOscs = true;
+		buildUnisonOscillators(forceResetOscs);
 	}
 	
 	const WavetableType newSecondaryType = static_cast<WavetableType>(static_cast<int>(tree.getRawParameterValue("SECONDOSCTYPECOMBOBOX")->load()));
@@ -254,3 +298,36 @@ maxiEnv& WavetableSynth::getEnvelope2(int oscillatorId)
 	
 	return env2;
 }
+
+void WavetableSynth::buildUnisonOscillators(bool forceResetOscs)
+{
+	unisonNumVoices = tree.getRawParameterValue(UNISON_NUM_VOICES)->load();
+	unisonDetuneAmount = tree.getRawParameterValue(UNISON_DETUNE_AMOUNT)->load();
+	unisonStereoAmount = tree.getRawParameterValue(UNISON_STEREO_AMOUNT)->load();
+	
+	const int oldNumOscs = (int)unisonOscillators.size();
+	if (forceResetOscs || unisonNumVoices != oldNumOscs)
+	{
+		unisonOscillators.clear();
+		unisonOscillators.reserve(unisonNumVoices);
+		for (int i = 0; i < unisonNumVoices; ++i)
+		{
+			switch(oscType)
+			{
+				case SineWave:
+						unisonOscillators.emplace_back(std::make_shared<SineWaveOscillator>());
+					break;
+				case SquareWave:
+						unisonOscillators.emplace_back(std::make_shared<SquareWaveOscillator>());
+					break;
+				case SawWave:
+						unisonOscillators.emplace_back(std::make_shared<SawWaveOscillator>());
+					break;
+				default:
+					break;
+			}
+			unisonOscillators[i]->init(sampleRate);
+		}
+	}
+}
+

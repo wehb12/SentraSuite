@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "UIKeyNames.h"
 
 //==============================================================================
 WavetableSynthAudioProcessor::WavetableSynthAudioProcessor()
@@ -218,6 +219,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout WavetableSynthAudioProcessor
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("OPENFILTERSPEEDSLIDER", 1), "OpenFilterSpeedSlider", juce::NormalisableRange<float>(1.0f, 10.0f), 1.0f));
 	params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("OPENFILTERSTATE", 1), "OpenFilterSpeedButton", false));
 	params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("KEYTRACKSTATE", 1), "KeyTackButton", false));
+	
+	// unison
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID(UNISON_NUM_VOICES, 1), "UnisonNumVoices", juce::NormalisableRange<float>(1.0f, 48.0f, 1.0f), 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID(UNISON_DETUNE_AMOUNT, 1), "UnisonDetuneAmount", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 0.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID(UNISON_STEREO_AMOUNT, 1), "UnisonStereoAmount", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 25.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID(UNISON_NUM_VOICES_OSC2, 1), "UnisonNumVoices2NDOSC", juce::NormalisableRange<float>(1.0f, 48.0f, 1.0f), 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID(UNISON_DETUNE_AMOUNT_OSC2, 1), "UnisonDetuneAmount2NDOSC", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 0.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID(UNISON_STEREO_AMOUNT_OSC2, 1), "UnisonStereoAmount2NDOSC", juce::NormalisableRange<float>(0.0f, 100.0f, 1.0f), 25.0f));
 	
 	return { params.begin(), params.end() };
 }

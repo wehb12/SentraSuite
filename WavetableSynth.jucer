@@ -5,11 +5,14 @@
               headerPath="../../ThirdParty/">
   <MAINGROUP id="IdzQi1" name="WavetableSynth">
     <GROUP id="{3904C17C-26F4-EAF0-38B5-79C73FE8EC26}" name="Source">
+      <FILE id="QEPZUx" name="UIKeyNames.h" compile="0" resource="0" file="Source/UIKeyNames.h"/>
       <GROUP id="{5831E7E9-D94C-A9A3-A493-44AFC4ADA824}" name="UIComponents">
         <FILE id="nHbIbm" name="EnvelopeGui.cpp" compile="1" resource="0" file="Source/EnvelopeGui.cpp"/>
         <FILE id="VA5GUv" name="EnvelopeGui.h" compile="0" resource="0" file="Source/EnvelopeGui.h"/>
         <FILE id="pRwltc" name="FilterGui.cpp" compile="1" resource="0" file="Source/FilterGui.cpp"/>
         <FILE id="RWYCBO" name="FilterGui.h" compile="0" resource="0" file="Source/FilterGui.h"/>
+        <FILE id="CcuKdt" name="UnisonGui.cpp" compile="1" resource="0" file="Source/UnisonGui.cpp"/>
+        <FILE id="faxHiK" name="UnisonGui.h" compile="0" resource="0" file="Source/UnisonGui.h"/>
         <FILE id="NEfvt6" name="WavetableTypeSelector.cpp" compile="1" resource="0"
               file="Source/WavetableTypeSelector.cpp"/>
         <FILE id="HW0PJp" name="WavetableTypeSelector.h" compile="0" resource="0"

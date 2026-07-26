@@ -13,6 +13,7 @@
 #include "WavetableTypeSelector.h"
 #include "EnvelopeGui.h"
 #include "FilterGui.h"
+#include "UnisonGui.h"
 
 //==============================================================================
 /**
@@ -37,4 +38,5 @@ private:
 	WavetableTypeSelector wavetableTypeSelector;
 	EnvelopeGui envelopeGui;
 	FilterGui filterGui;
+	UnisonGui unisonGui;
 };
